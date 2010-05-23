@@ -23,10 +23,12 @@
 __author__ = "Mike Knapp"
 
 import oauth
+import logging
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
+from sessions import Session
 
 class MainHandler(webapp.RequestHandler):
 
@@ -37,13 +39,6 @@ class MainHandler(webapp.RequestHandler):
     # information: http://www.twitter.com/oauth
     application_key = "fIPX8vbptBVFXe0QQPww4w" 
     application_secret = "t2lxYTZy5npenElfuAWV1uWVcoUQVCB2RENwx0uYRw4"
-    
-    # Fill in the next 2 lines after you have successfully logged in to 
-    # Twitter per the instructions above. This is the *user's* token and 
-    # secret. You need these values to call the API on their behalf after 
-    # they have logged in to your app.
-    user_token = "FILL_IN"  
-    user_secret = "FILL_IN"
     
     # In the real world, you'd want to edit this callback URL to point to your
     # production server. This is where the user is sent to after they have
@@ -60,10 +55,17 @@ class MainHandler(webapp.RequestHandler):
       auth_token = self.request.get("oauth_token")
       auth_verifier = self.request.get("oauth_verifier")
       user_info = client.get_user_info(auth_token, auth_verifier=auth_verifier)
-      return self.response.out.write(user_info)
-      
+      self.session = Session()
+      self.session['token'] = user_info['token']
+      self.session['secret'] = user_info['secret']
+      return self.redirect("%s/timeline" % self.request.host_url)
+
     if mode == "timeline":
       timeline_url = "http://twitter.com/statuses/user_timeline.xml"
+      self.session = Session()
+      user_token = self.session['token']
+      user_secret = self.session['secret']
+      logging.info("%s %s" % (user_token, user_secret))
       result = client.make_request(url=timeline_url, token=user_token, 
           secret=user_secret)
       return self.response.out.write(result.content)
