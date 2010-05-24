@@ -2,6 +2,7 @@
 
 import logging
 import tweepy
+import string,re
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -10,9 +11,16 @@ from sessions import Session
 
 class MainHandler(webapp.RequestHandler):
 
+  def repl_link(self, m):
+    return m.group(1) + "<a href=\"" + m.group(2) + "\">" + m.group(2) + "</a>" + m.group(3)
+
   def process_status(self, text):
-    
-    return text
+    re_link = re.compile(r"(.*?)(http[s]?://[a-zA-Z0-9._/-\?]*)(.*?)", re.IGNORECASE)
+    links_added = re_link.sub(self.repl_link, text)
+
+    final = links_added + "</br></br>"
+
+    return final
 
   def get(self, mode=""):
     
@@ -52,8 +60,8 @@ class MainHandler(webapp.RequestHandler):
 
       api = tweepy.API(auth)
       content = ""
-      for status in tweepy.Cursor(api.user_timeline).items(200):
-        html_status = process_status(status.text)
+      for status in tweepy.Cursor(api.user_timeline).items(500):
+        html_status = self.process_status(status.text)
         content = content + html_status
 
       return self.response.out.write(content)
