@@ -1,29 +1,7 @@
 #!/usr/bin/env python
-#
-# This is an sample AppEngine application that shows how to 1) log in a user
-# using the Twitter OAuth API and 2) extract their timeline.
-#
-# INSTRUCTIONS: 
-#
-# 1. Set up a new AppEngine application using this file, let's say on port 
-# 8080. Rename this file to main.py, or alternatively modify your app.yaml 
-# file.)
-# 2. Fill in the application ("consumer") key and secret lines below.
-# 3. Visit http://localhost:8080 and click the "login" link to be redirected
-# to Twitter.com.
-# 4. Once verified, you'll be redirected back to your app on localhost and
-# you'll see some of your Twitter user info printed in the browser.
-# 5. Copy and paste the token and secret info into this file, replacing the 
-# default values for user_token and user_secret. You'll need the user's token 
-# & secret info to interact with the Twitter API on their behalf from now on.
-# 6. Finally, visit http://localhost:8080/timeline to see your twitter 
-# timeline.
-#
 
-__author__ = "Mike Knapp"
-
-import oauth
 import logging
+import tweepy
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -32,43 +10,53 @@ from sessions import Session
 
 class MainHandler(webapp.RequestHandler):
 
+  def process_status(self, text):
+    
+    return text
+
   def get(self, mode=""):
     
-    # Your application Twitter application ("consumer") key and secret.
-    # You'll need to register an application on Twitter first to get this
-    # information: http://www.twitter.com/oauth
     application_key = "fIPX8vbptBVFXe0QQPww4w" 
     application_secret = "t2lxYTZy5npenElfuAWV1uWVcoUQVCB2RENwx0uYRw4"
-    
-    # In the real world, you'd want to edit this callback URL to point to your
-    # production server. This is where the user is sent to after they have
-    # authenticated with Twitter. 
     callback_url = "%s/verify" % self.request.host_url
-    
-    client = oauth.TwitterClient(application_key, application_secret, 
-        callback_url)
-    
+
+    auth = tweepy.OAuthHandler(application_key, application_secret, callback_url)
+    self.session = Session()
+
     if mode == "login":
-      return self.redirect(client.get_authorization_url())
+      redirection_url = auth.get_authorization_url()
+      self.session['request_token'] = (auth.request_token.key, auth.request_token.secret)
+      return self.redirect(redirection_url)
       
     if mode == "verify":
       auth_token = self.request.get("oauth_token")
       auth_verifier = self.request.get("oauth_verifier")
-      user_info = client.get_user_info(auth_token, auth_verifier=auth_verifier)
-      self.session = Session()
-      self.session['token'] = user_info['token']
-      self.session['secret'] = user_info['secret']
+
+      request_token = self.session['request_token']
+      auth.set_request_token(request_token[0], request_token[1])
+
+      auth.get_access_token(auth_verifier)
+
+      self.session['access_token'] = auth.access_token.key
+      self.session['access_secret'] = auth.access_token.secret
       return self.redirect("%s/timeline" % self.request.host_url)
 
     if mode == "timeline":
       timeline_url = "http://twitter.com/statuses/user_timeline.xml"
-      self.session = Session()
-      user_token = self.session['token']
-      user_secret = self.session['secret']
-      logging.info("%s %s" % (user_token, user_secret))
-      result = client.make_request(url=timeline_url, token=user_token, 
-          secret=user_secret)
-      return self.response.out.write(result.content)
+
+      access_token = self.session['access_token']
+      access_secret = self.session['access_secret']
+
+      logging.info("%s %s" % (access_token, access_secret))
+      auth.set_access_token(access_token, access_secret)
+
+      api = tweepy.API(auth)
+      content = ""
+      for status in tweepy.Cursor(api.user_timeline).items(200):
+        html_status = process_status(status.text)
+        content = content + html_status
+
+      return self.response.out.write(content)
     
     self.response.out.write("<a href='/login'>Login via Twitter</a>")
 
