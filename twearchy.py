@@ -5,7 +5,7 @@ import tweepy
 import string,re
 
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp import util, template
 
 from sessions import Session
 
@@ -15,10 +15,10 @@ class MainHandler(webapp.RequestHandler):
     return m.group(1) + "<a href=\"" + m.group(2) + "\">" + m.group(2) + "</a>" + m.group(3)
 
   def process_status(self, text):
-    re_link = re.compile(r"(.*?)(http[s]?://[a-zA-Z0-9._/-\?]*)(.*?)", re.IGNORECASE)
+    re_link = re.compile(r"(.*?)(http[s]?://[a-zA-Z0-9._/\-\?]*)(.*?)", re.IGNORECASE)
     links_added = re_link.sub(self.repl_link, text)
 
-    final = links_added + "</br></br>"
+    final = "<tr><td>" + links_added + "</td></tr>"
 
     return final
 
@@ -64,7 +64,13 @@ class MainHandler(webapp.RequestHandler):
         html_status = self.process_status(status.text)
         content = content + html_status
 
-      return self.response.out.write(content)
+      template_values = {
+        "username": api.me().screen_name,
+        "timeline": content
+        }
+
+      return self.response.out.write(template.render("timeline.html", template_values))
+                             
     
     self.response.out.write("<a href='/login'>Login via Twitter</a>")
 
