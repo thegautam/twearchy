@@ -15,7 +15,13 @@ class MainHandler(webapp.RequestHandler):
     return m.group(1) + "<a href=\"" + m.group(2) + "\">" + m.group(2) + "</a>" + m.group(3)
 
   def process_status(self, text):
-    re_link = re.compile(r"(.*?)(http[s]?://[a-zA-Z0-9._/\-\?]*)(.*?)", re.IGNORECASE)
+    re_link = re.compile(r"""
+        (.*?)          # Part before link
+        (http[s]?://   # Link start
+        [\w._/\-\?=]*) # Actual link including dots
+        (.*?)""",      # Part after link
+        re.IGNORECASE | re.VERBOSE)
+
     links_added = re_link.sub(self.repl_link, text)
 
     final = "<tr><td>" + links_added + "</td></tr>"
