@@ -53,7 +53,25 @@ class MainHandler(webapp.RequestHandler):
 
       self.session['access_token'] = auth.access_token.key
       self.session['access_secret'] = auth.access_token.secret
-      return self.redirect("%s/timeline" % self.request.host_url)
+      return self.redirect("%s/pulling" % self.request.host_url)
+
+    if mode == "pulling":
+      access_token = self.session['access_token']
+      access_secret = self.session['access_secret']
+
+      auth.set_access_token(access_token, access_secret)
+
+      api = tweepy.API(auth)
+      redirect_url = "%s/timeline" % self.request.host_url
+
+      logging.info("username %s " % api.me().screen_name)
+
+      template_values = {
+        "username": api.me().screen_name,
+        "redirect_url": redirect_url,
+        }
+
+      return self.response.out.write(template.render("pulling.html", template_values))
 
     if mode == "timeline":
       timeline_url = "http://twitter.com/statuses/user_timeline.xml"
