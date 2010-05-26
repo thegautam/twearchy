@@ -31,7 +31,7 @@ class MainHandler(webapp.RequestHandler):
     auth = tweepy.OAuthHandler(application_key, application_secret, callback_url)
     self.session = Session()
 
-    if mode == "login":
+    if mode == "":
       redirection_url = auth.get_authorization_url(signin_with_twitter=True)
       self.session['request_token'] = (auth.request_token.key, auth.request_token.secret)
       return self.redirect(redirection_url)
@@ -71,9 +71,6 @@ class MainHandler(webapp.RequestHandler):
 
       return self.response.out.write(template.render("timeline.html", template_values))
                              
-    
-    self.response.out.write("<a href='/login'>Login via Twitter</a>")
-
 def main():
   application = webapp.WSGIApplication([('/(.*)', MainHandler)],
                                        debug=True)
