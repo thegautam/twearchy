@@ -11,7 +11,7 @@ handlers:
 
 - url: /twearchy.png
   static_files: twearchy.png
-  upload: twearcy.png
+  upload: twearchy.png
 
 - url: /.*
   script: twearchy.py
