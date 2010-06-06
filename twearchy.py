@@ -12,7 +12,7 @@ from sessions import Session
 class MainHandler(webapp.RequestHandler):
 
   def repl_link(self, m):
-    return m.group(1) + "<a href=\"" + m.group(2) + "\">" + m.group(2) + "</a>" + m.group(3)
+    return m.group(1) + "<a href=\"" + m.group(2) + "\" target=\"_blank\">" + m.group(2) + "</a>" + m.group(3)
 
   def process_status(self, text):
     re_link = re.compile(r"""
