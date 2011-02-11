@@ -84,7 +84,7 @@ class MainHandler(webapp.RequestHandler):
 
       api = tweepy.API(auth)
       content = ""
-      for status in tweepy.Cursor(api.user_timeline).items(500):
+      for status in tweepy.Cursor(api.user_timeline).items(1000):
         html_status = self.process_status(status.text)
         content = content + html_status
 
