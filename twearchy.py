@@ -4,10 +4,11 @@ import logging
 import tweepy
 import string,re
 
-from google.appengine.ext import webapp
+from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp import util, template
 
 from sessions import Session
+from dbwrapper import dbHandler, Tweet
 
 class MainHandler(webapp.RequestHandler):
 
@@ -74,7 +75,6 @@ class MainHandler(webapp.RequestHandler):
       return self.response.out.write(template.render("pulling.html", template_values))
 
     if mode == "timeline":
-      timeline_url = "http://twitter.com/statuses/user_timeline.xml"
 
       access_token = self.session['access_token']
       access_secret = self.session['access_secret']
@@ -83,8 +83,17 @@ class MainHandler(webapp.RequestHandler):
       auth.set_access_token(access_token, access_secret)
 
       api = tweepy.API(auth)
+
+      dbhandler = dbHandler()
+      dbhandler.update_db(api)
+
       content = ""
-      for status in tweepy.Cursor(api.user_timeline).items(1000):
+
+      t = Tweet.all()
+      t.filter("user_id = ", api.me().id)
+      t.order("-id")
+
+      for status in t:
         html_status = self.process_status(status.text)
         content = content + html_status
 
