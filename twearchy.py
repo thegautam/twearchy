@@ -88,6 +88,7 @@ class MainHandler(webapp.RequestHandler):
       dbhandler.update_db(api)
 
       content = ""
+      count = 0
 
       t = Tweet.all()
       t.filter("user_id = ", api.me().id)
@@ -96,10 +97,12 @@ class MainHandler(webapp.RequestHandler):
       for status in t:
         html_status = self.process_status(status.text)
         content = content + html_status
+        count = count + 1
 
       template_values = {
         "username": api.me().screen_name,
-        "timeline": content
+        "timeline": content,
+        "count": count
         }
 
       return self.response.out.write(template.render("timeline.html", template_values))
