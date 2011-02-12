@@ -1,41 +1,34 @@
-table.center 
-{
-    margin-left:10%;
+table.center {
+    margin-left: 10%;
 }
 
-div.username
-{
-    font-family:'Gruppo';
-    font-size:50px;
+div.username {
+    font-family: 'Gruppo';
+    font-size: 50px;
 }
 
-div.message
-{
-    font-family:'Gruppo';
-    font-size:18px;
+div.message {
+    font-family: 'Gruppo';
+    font-size: 18px;
 }
 
-p.tweet
-{
-    padding:3px;
-    font-family:'Molengo';
-    font-size:16px;
+p.tweet {
+    padding: 3px;
+    font-family: 'Molengo';
+    font-size: 16px;
 }
 
-span.atusr
-{
-   color:#CCCCCC;
+span.atusr {
+   color: #CCCCCC;
 }
 
-a
-{
-   text-decoration:none;
-   color:#006699;
+a {
+   text-decoration: none;
+   color: #006699;
 }
 
-a.h
-{
-   text-decoration:none;
-   color:#002070;
+a.h {
+   text-decoration: none;
+   color: #002070;
 }
 
