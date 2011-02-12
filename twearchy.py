@@ -54,9 +54,9 @@ class MainHandler(webapp.RequestHandler):
 
       self.session['access_token'] = auth.access_token.key
       self.session['access_secret'] = auth.access_token.secret
-      return self.redirect("%s/pulling" % self.request.host_url)
+      return self.redirect("%s/fetching" % self.request.host_url)
 
-    if mode == "pulling":
+    if mode == "fetching":
       access_token = self.session['access_token']
       access_secret = self.session['access_secret']
 
@@ -72,7 +72,7 @@ class MainHandler(webapp.RequestHandler):
         "redirect_url": redirect_url,
         }
 
-      return self.response.out.write(template.render("pulling.html", template_values))
+      return self.response.out.write(template.render("fetching.html", template_values))
 
     if mode == "timeline":
 
