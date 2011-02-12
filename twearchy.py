@@ -12,14 +12,19 @@ from dbwrapper import dbHandler, Tweet
 
 class MainHandler(webapp.RequestHandler):
 
-  def process_status(self, text):
+  def process_status(self, tweet):
+    text = tweet.text
+
     re_link = re.compile(r'(http[s]?://[\w._/\-\?=]*)', re.I)
     links_added = re_link.sub(r'<a href="\1" target="_blank">\1</a>', text)
     
     re_at = re.compile(r'((?<!\w)@\w+)', re.I)
     at_added = re_at.sub(r'<span class=atusr>\1</span>', links_added)
-       
-    final = "<tr><td/><td><p class=tweet>" + at_added + "</p></td></tr>"
+
+    href_added = '<a href=http://bing.com>%s</a>' % at_added
+
+    meta = '<td><div class=mt>%s</div></td>' % tweet.datetime.ctime()
+    final = "<tr>" + meta + "<td><div class=tweet>" + href_added + "</div></td></tr>"
 
     return final
 
@@ -107,7 +112,7 @@ class MainHandler(webapp.RequestHandler):
       t.order("-id")
 
       for status in t:
-        html_status = self.process_status(status.text)
+        html_status = self.process_status(status)
         content = content + html_status
         count = count + 1
 

@@ -12,10 +12,15 @@ div.message {
     font-size: 18px;
 }
 
-p.tweet {
+div.tweet {
     padding: 3px;
     font-family: 'Molengo';
     font-size: 16px;
+}
+
+div.mt {
+    font-family: 'Gruppo';
+    font-size: 17px;
 }
 
 span.atusr {
