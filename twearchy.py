@@ -23,6 +23,24 @@ class MainHandler(webapp.RequestHandler):
 
     return final
 
+  def get_trash_talk(self, count):
+    message = 'Feedback'
+    if count < 10:
+      message = 'Hello, World!'
+    elif count < 50:
+      message = 'Welcome, Newbie!'
+    elif count < 100:
+      message = 'Speak up!'
+    elif count < 500:
+      message = 'Growing confidence?'
+    elif count < 1000:
+      message = 'Jabber Jabber...'
+    else:
+      message = 'Listen much?'
+
+    return '<a class=h href="mailto:gkedia@conaytus.com?subject=Feedback Love">%s</a>' % message
+
+
   def get(self, mode=""):
     
     application_key = "fIPX8vbptBVFXe0QQPww4w" 
@@ -96,7 +114,8 @@ class MainHandler(webapp.RequestHandler):
       template_values = {
         "username": api.me().screen_name,
         "timeline": content,
-        "count": count
+        "count": count,
+        "trash_talk": self.get_trash_talk(count)
         }
 
       return self.response.out.write(template.render("timeline.html", template_values))
