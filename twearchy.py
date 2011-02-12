@@ -25,7 +25,7 @@ class MainHandler(webapp.RequestHandler):
 
     links_added = re_link.sub(self.repl_link, text)
 
-    final = "<tr><td>" + links_added + "</td></tr>"
+    final = "<tr><td/><td>" + links_added + "</td></tr>"
 
     return final
 
