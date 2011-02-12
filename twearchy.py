@@ -4,6 +4,7 @@ import logging
 import tweepy
 import string,re
 
+from datetime import datetime, timedelta
 from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp import util, template
 
@@ -12,7 +13,7 @@ from dbwrapper import dbHandler, Tweet
 
 class MainHandler(webapp.RequestHandler):
 
-  def process_status(self, tweet):
+  def process_status(self, tweet, utc_offset):
     text = tweet.text
 
     re_link = re.compile(r'(http[s]?://[\w._/\-\?=]*)', re.I)
@@ -23,7 +24,8 @@ class MainHandler(webapp.RequestHandler):
 
     href_added = '<a href=http://bing.com>%s</a>' % at_added
 
-    meta = '<td><div class=mt>%s</div></td>' % tweet.datetime.ctime()
+    dt_offset = timedelta(seconds=utc_offset)
+    meta = '<td><div class=mt>%s</div></td>' % (tweet.datetime + dt_offset).ctime()
     final = "<tr>" + meta + "<td><div class=tweet>" + href_added + "</div></td></tr>"
 
     return final
@@ -80,12 +82,14 @@ class MainHandler(webapp.RequestHandler):
       auth.set_access_token(access_token, access_secret)
 
       api = tweepy.API(auth)
+      me = api.me()
+
       redirect_url = "%s/timeline" % self.request.host_url
 
-      logging.info("username %s " % api.me().screen_name)
+      logging.info("username %s " % me.screen_name)
 
       template_values = {
-        "username": api.me().screen_name,
+        "username": me.screen_name,
         "redirect_url": redirect_url,
         }
 
@@ -100,6 +104,7 @@ class MainHandler(webapp.RequestHandler):
       auth.set_access_token(access_token, access_secret)
 
       api = tweepy.API(auth)
+      me = api.me()
 
       dbhandler = dbHandler()
       dbhandler.update_db(api)
@@ -108,11 +113,11 @@ class MainHandler(webapp.RequestHandler):
       count = 0
 
       t = Tweet.all()
-      t.filter("user_id = ", api.me().id)
+      t.filter("user_id = ", me.id)
       t.order("-id")
 
       for status in t:
-        html_status = self.process_status(status)
+        html_status = self.process_status(status, me.utc_offset)
         content = content + html_status
         count = count + 1
 
