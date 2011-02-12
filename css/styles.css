@@ -1,0 +1,24 @@
+table.center 
+{
+    margin-left:10%;
+}
+
+div.username
+{
+    font-family:'Gruppo';
+    font-size:50px;
+}
+
+div.message
+{
+    font-family:'Gruppo';
+    font-size:18px;
+}
+
+p.tweet
+{
+    padding:3px;
+    font-family:'Molengo';
+    font-size:16px;
+}
+

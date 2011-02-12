@@ -9,13 +9,14 @@ handlers:
   static_files: favicon.ico
   upload: favicon.ico
 
-- url: /twearchy.png
-  static_files: twearchy.png
-  upload: twearchy.png
+- url: /img
+  static_dir: img
+
+- url: /css
+  static_dir: css
 
 - url: /.*
   script: twearchy.py
-
 
 builtins:
 - datastore_admin: on

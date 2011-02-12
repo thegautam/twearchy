@@ -1,12 +1,20 @@
 <html>        
     <head>
+        <link href='http://fonts.googleapis.com/css?family=Gruppo' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>twearchy {{username}}</title>
-        <link href="http://twearchy.appspot.com//favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
         <meta http-equiv="REFRESH" content="0;url={{redirect_url}}">
     </head>
     <body>
-        <img src="/twearchy.png" />
-        <h1>Pulling updates from {{username}}...</h1>
+        <table class=center>
+        <tr>
+            <td><img src="img/twearchy.png" /></td>
+            <td valign=bottom>
+                <div class=username>{{username}}</div>
+                <div class=message>Fetching updates. Meanwhile, try pronouncing hiybbprqag.</div>
+            </td>
     </body>
 </html>

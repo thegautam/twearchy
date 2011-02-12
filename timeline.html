@@ -1,28 +1,19 @@
 <html>        
     <head>
-        <style type="text/css">
-            table.center 
-            {
-                margin-left:10%
-            }
-            div.username
-            {
-                font-size:40px;
-            }            
-            
-        </style>
-
+        <link href='http://fonts.googleapis.com/css?family=Gruppo' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>twearchy {{username}}</title>
-        <link href="http://twearchy.appspot.com//favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     </head>
     <body>
         <table class=center>
         <tr>
-            <td><img src="/twearchy.png" /></td>
+            <td><img src="img/twearchy.png" /></td>
             <td valign=bottom>
                 <div class=username>{{username}}</div>
-                {{count}} tweets
+                <div class=message>{{count}} tweets</div>
             </td>
         <tr><td><br/></td></tr>
         </tr>
