@@ -25,7 +25,10 @@ class MainHandler(webapp.RequestHandler):
 
     links_added = re_link.sub(self.repl_link, text)
 
-    final = "<tr><td/><td><p class=tweet>" + links_added + "</p></td></tr>"
+    re_at = re.compile(r'((?<!\w)@\w+)', re.I)
+    at_added = re_at.sub(r'<span class=atusr>\1</span>', links_added)
+       
+    final = "<tr><td/><td><p class=tweet>" + at_added + "</p></td></tr>"
 
     return final
 
