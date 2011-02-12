@@ -26,13 +26,18 @@ class User(db.Model):
     lower_id = db.IntegerProperty(required=True)
     upper_id = db.IntegerProperty(required=True)
 
-class dbHandler():
-
-    def get_newest_tweet_id(self, user_id):
+    def get_last_tweet(self):
         t = Tweet.all()
-        t.filter("user_id =", user.id)
-        t.sort("id")
-        newest_tweet = t.get()
+        t.filter("user_id =", self.id)
+        t.order("-id")
+        return t.get()
+
+    def make_ids_current(self):
+        self.upper_id = MAX_LONG
+        self.lower_id = self.get_last_tweet().id
+        self.put()
+
+class dbHandler():
 
     def get_user(self, me):
         user = User.get_or_insert(key_name = str(me.id),
@@ -75,15 +80,6 @@ class dbHandler():
 
         return more_tweets
 
-    def make_ids_current(self, user):
-        t = Tweet.all()
-        t.filter("user_id =", user.id)
-        t.order("-id")
-        last_tweet = t.get()
-
-        user.upper_id = MAX_LONG
-        user.lower_id = last_tweet.id
-
     def update_db(self, api):
         me = api.me()
         user = self.get_user(me)
@@ -91,4 +87,4 @@ class dbHandler():
         while self.save_missing_tweets(api, user):
             """ Nothing """
 
-        self.make_ids_current(user)
+        user.make_ids_current()
