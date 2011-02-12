@@ -40,17 +40,16 @@ class User(db.Model):
 class dbHandler():
 
     def get_user(self, me):
-        user = User.get_or_insert(key_name = str(me.id),
+        return User.get_or_insert(key_name = str(me.id),
                                   id = me.id,
                                   screen_name = me.screen_name,
                                   lower_id = 1,
                                   upper_id = MAX_LONG)
-        return user
 
-    def get_location(self, status):
+    def get_location(self, tweet):
         location = None
-        if status.place != None:
-            latlong = status.place["bounding_box"]["coordinates"][0][0]
+        if tweet.place != None:
+            latlong = tweet.place["bounding_box"]["coordinates"][0][0]
             location = str(latlong[1]) + "," + str(latlong[0])
         return location
 
@@ -62,15 +61,15 @@ class dbHandler():
                                 since_id = str(user.lower_id),
                                 max_id = str(user.upper_id - 1)).items(MAX_FETCH)
 
-        for status in tweets:
+        for tweet in tweets:
             more_tweets = True
-            location = self.get_location(status)
+            location = self.get_location(tweet)
 
-            t = Tweet.get_or_insert(key_name = str(status.id),
-                                    user_id = status.user.id,
-                                    id = status.id,
-                                    text = status.text,
-                                    datetime = status.created_at,
+            t = Tweet.get_or_insert(key_name = str(tweet.id),
+                                    user_id = tweet.user.id,
+                                    id = tweet.id,
+                                    text = tweet.text,
+                                    datetime = tweet.created_at,
                                     location = None)
 
             upper_id = min(upper_id, t.id)
@@ -81,8 +80,7 @@ class dbHandler():
         return more_tweets
 
     def update_db(self, api):
-        me = api.me()
-        user = self.get_user(me)
+        user = self.get_user(api.me())
 
         while self.save_missing_tweets(api, user):
             """ Nothing """
