@@ -14,7 +14,7 @@ class MainHandler(webapp.RequestHandler):
 
   def process_status(self, text):
     re_link = re.compile(r'(http[s]?://[\w._/\-\?=]*)', re.I)
-    links_added = re_link.sub(r'<a href=\"\1\" target=\"_blank\">\1</a>', text)
+    links_added = re_link.sub(r'<a href="\1" target="_blank">\1</a>', text)
     
     re_at = re.compile(r'((?<!\w)@\w+)', re.I)
     at_added = re_at.sub(r'<span class=atusr>\1</span>', links_added)
