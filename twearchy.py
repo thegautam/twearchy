@@ -25,7 +25,8 @@ class MainHandler(webapp.RequestHandler):
     href_added = '<a href=http://bing.com>%s</a>' % at_added
 
     dt_offset = timedelta(seconds=utc_offset)
-    meta = '<td><div class=mt>%s</div></td>' % (tweet.datetime + dt_offset).ctime()
+    time_str = (tweet.datetime + dt_offset).strftime('%d %b \'%y %a  %I:%M %p')
+    meta = '<td><div class=mt>%s</div></td>' % time_str
     final = "<tr>" + meta + "<td><div class=tweet>" + href_added + "</div></td></tr>"
 
     return final

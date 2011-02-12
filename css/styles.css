@@ -21,6 +21,11 @@ div.tweet {
 div.mt {
     font-family: 'Gruppo';
     font-size: 17px;
+    float: right;
+}
+
+img.logo {
+    float: right;
 }
 
 span.atusr {
