@@ -4,6 +4,7 @@ import logging
 from google.appengine.ext import db
 
 MAX_LONG = ((2 ** 63) - 1)
+MAX_FETCH = 200
 
 class Tweet(db.Model):
     user_id = db.IntegerProperty(required=True)
@@ -49,13 +50,12 @@ class dbHandler():
         return location
 
     def save_missing_tweets(self, api, user):
-        max_items = 200
         more_tweets = False
         upper_id = user.upper_id
 
         tweets =  tweepy.Cursor(api.user_timeline, 
                                 since_id = str(user.lower_id),
-                                max_id = str(user.upper_id - 1)).items(max_items)
+                                max_id = str(user.upper_id - 1)).items(MAX_FETCH)
 
         for status in tweets:
             more_tweets = True
