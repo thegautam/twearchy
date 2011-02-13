@@ -13,23 +13,28 @@ from dbwrapper import dbHandler, Tweet
 
 class MainHandler(webapp.RequestHandler):
 
-  def process_status(self, tweet, utc_offset):
-    text = tweet.text
+  def process_status(self, tweet, user):
 
+    # Convert links to pointers.
     re_link = re.compile(r'(http[s]?://[\w._/\-\?=]*)', re.I)
-    links_added = re_link.sub(r'<a href="\1" target="_blank">\1</a>', text)
-    
+    links_added = re_link.sub(r'<a href="\1" target="_blank">\1</a>', tweet.text)
+
+    # Grey out user names.
     re_at = re.compile(r'((?<!\w)@\w+)', re.I)
-    at_added = re_at.sub(r'<span class=atusr>\1</span>', links_added)
+    html_status = re_at.sub(r'<span class=atusr>\1</span>', links_added)
 
-    href_added = '<a href=http://bing.com>%s</a>' % at_added
+    # Get the local time of tweet.
+    dt_offset = timedelta(seconds = user.utc_offset)
+    str_format = '<div class=meta>%d %b %Y</div><div class=meta> %a %I:%M %p</div>'
+    time_str = (tweet.datetime + dt_offset).strftime(str_format)
 
-    dt_offset = timedelta(seconds=utc_offset)
-    time_str = (tweet.datetime + dt_offset).strftime('%d %b \'%y %a  %I:%M %p')
-    meta = '<td><div class=mt>%s</div></td>' % time_str
-    final = "<tr>" + meta + "<td><div class=tweet>" + href_added + "</div></td></tr>"
+    # Get the link for the tweet.
+    status_link = 'http://twitter.com/#!/%s/status/%s' % (user.screen_name, tweet.id)
 
-    return final
+    # Make the meta tag.
+    html_meta = '<td width=100px><a href="%s" target="_blank">%s</a></td>' % (str(status_link), time_str)
+
+    return  "<tr class=tweet>" + html_meta + "<td><div class=status>" + html_status  + "</div></td></tr>"
 
   def get_trash_talk(self, count):
     message = 'Feedback'
@@ -118,7 +123,7 @@ class MainHandler(webapp.RequestHandler):
       t.order("-id")
 
       for status in t:
-        html_status = self.process_status(status, me.utc_offset)
+        html_status = self.process_status(status, me)
         content = content + html_status
         count = count + 1
 
