@@ -39,6 +39,12 @@ span.atusr {
 
 a {
    text-decoration: none;
-   color: #002070;
+   color: #2020B0;
 }
+
+a:hover {
+   text-decoration: none;
+   color: #2060B0;
+}
+
 
