@@ -13,14 +13,14 @@ div.message {
 }
 
 div.status {
-    padding: 3px;
+    padding: 5px;
     font-family: 'Molengo';
-    font-size: 16px;
+    font-size: 18px;
 }
 
 div.meta {
-    font-family: 'Gruppo';
-    font-size: 15px;
+    font-family: 'Molengo';
+    font-size: 13px;
     float: right;
     display: none;
 }
