@@ -3,13 +3,13 @@ table.center {
 }
 
 div.username {
-    font-family: 'Gruppo';
-    font-size: 50px;
+    font-family: 'Syncopate';
+    font-size: 46px;
 }
 
 div.message {
-    font-family: 'Gruppo';
-    font-size: 18px;
+    font-family: 'Molengo';
+    font-size: 13px;
 }
 
 div.status {
@@ -38,11 +38,6 @@ span.atusr {
 }
 
 a {
-   text-decoration: none;
-   color: #006699;
-}
-
-a.h {
    text-decoration: none;
    color: #002070;
 }
