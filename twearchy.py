@@ -69,11 +69,7 @@ class MainHandler(webapp.RequestHandler):
     self.session = Session()
 
     if mode == "":
-      template_values = {
-        "username": 'twearchy',
-        }
-
-      return self.response.out.write(template.render("landing.html", template_values))
+      return self.response.out.write(template.render("landing.html", None))
 
     if mode == "login":
       redirection_url = auth.get_authorization_url(signin_with_twitter=True)
