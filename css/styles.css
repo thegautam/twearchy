@@ -36,6 +36,10 @@ tr.tweet:hover .meta {
     display: block;
 }
 
+img {
+    border: none;
+}
+
 img.logo {
     float: right;
 }
