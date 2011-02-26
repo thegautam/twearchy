@@ -59,24 +59,29 @@ class MainHandler(webapp.RequestHandler):
 
     return '<a class=h href="mailto:gkedia@conaytus.com?subject=Feedback Love">%s</a>' % message
 
-  def handle_request(self, mode=""):
-    
+  def build_auth(self):
     application_key = "fIPX8vbptBVFXe0QQPww4w" 
     application_secret = "t2lxYTZy5npenElfuAWV1uWVcoUQVCB2RENwx0uYRw4"
     callback_url = "%s/verify" % self.request.host_url
 
-    auth = tweepy.OAuthHandler(application_key, application_secret, callback_url)
-    self.session = Session()
+    return tweepy.OAuthHandler(application_key, application_secret, callback_url)
 
+  def handle_request(self, mode=""):
+    
     if mode == "":
       return self.response.out.write(template.render("landing.html", None))
 
     if mode == "login":
+      auth = self.build_auth()
+      self.session = Session()
       redirection_url = auth.get_authorization_url(signin_with_twitter=True)
       self.session['request_token'] = (auth.request_token.key, auth.request_token.secret)
       return self.redirect(redirection_url)
       
     if mode == "verify":
+      auth = self.build_auth()
+      self.session = Session()
+
       auth_token = self.request.get("oauth_token")
       auth_verifier = self.request.get("oauth_verifier")
 
@@ -90,6 +95,9 @@ class MainHandler(webapp.RequestHandler):
       return self.redirect("%s/fetching" % self.request.host_url)
 
     if mode == "fetching":
+      auth = self.build_auth()
+      self.session = Session()
+
       access_token = self.session['access_token']
       access_secret = self.session['access_secret']
 
@@ -110,6 +118,8 @@ class MainHandler(webapp.RequestHandler):
       return self.response.out.write(template.render("fetching.html", template_values))
 
     if mode == "timeline":
+      auth = self.build_auth()
+      self.session = Session()
 
       access_token = self.session['access_token']
       access_secret = self.session['access_secret']
@@ -164,7 +174,6 @@ def main():
   application = webapp.WSGIApplication([('/(.*)', MainHandler)],
                                        debug=True)
   util.run_wsgi_app(application)
-
 
 if __name__ == '__main__':
   main()
