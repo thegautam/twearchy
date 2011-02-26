@@ -144,17 +144,21 @@ class MainHandler(webapp.RequestHandler):
 
       return self.response.out.write(template.render("timeline.html", template_values))
 
+  def handle_exception(self, exception, message):
+      logging.exception(exception)
+      template_values = {
+        "traceback": self.format_html(exception),
+        "message": message,
+        }
+      return self.response.out.write(template.render("yaa-utzah.html", template_values))
 
   def get(self, mode=""):
 
     try:
       return self.handle_request(mode)
-    except Exception,exception:
-      logging.exception(exception)
-      template_values = {
-        "traceback": self.format_html(traceback.format_exc()),
-        }
-      return self.response.out.write(template.render("yaa-utzah.html", template_values))
+    except Exception:
+      exception = traceback.format_exc()
+      self.handle_exception(exception, "We've hit some turbulence. Our engineers are on it as we speak.")
 
 def main():
   application = webapp.WSGIApplication([('/(.*)', MainHandler)],
