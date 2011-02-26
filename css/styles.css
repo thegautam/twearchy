@@ -18,6 +18,13 @@ div.status {
     font-size: 18px;
 }
 
+div.error {
+    padding: 5px;
+    font-family: 'Molengo';
+    font-size: 18px;
+    color: #EEE;
+}
+
 div.meta {
     font-family: 'Molengo';
     font-size: 13px;

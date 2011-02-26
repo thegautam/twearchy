@@ -3,6 +3,7 @@
 import logging
 import tweepy
 import string,re
+import traceback
 
 from datetime import datetime, timedelta
 from google.appengine.ext import webapp, db
@@ -12,6 +13,11 @@ from sessions import Session
 from dbwrapper import dbHandler, Tweet
 
 class MainHandler(webapp.RequestHandler):
+  def format_html(self, str):
+    out = string.replace(str, '  ', '&nbsp;&nbsp;')
+    out = string.replace(out, '\n', '<br/>')
+    return out
+
 
   def process_status(self, tweet, user):
 
@@ -53,8 +59,7 @@ class MainHandler(webapp.RequestHandler):
 
     return '<a class=h href="mailto:gkedia@conaytus.com?subject=Feedback Love">%s</a>' % message
 
-
-  def get(self, mode=""):
+  def handle_request(self, mode=""):
     
     application_key = "fIPX8vbptBVFXe0QQPww4w" 
     application_secret = "t2lxYTZy5npenElfuAWV1uWVcoUQVCB2RENwx0uYRw4"
@@ -142,7 +147,19 @@ class MainHandler(webapp.RequestHandler):
         }
 
       return self.response.out.write(template.render("timeline.html", template_values))
-                             
+
+
+  def get(self, mode=""):
+
+    try:
+      return self.handle_request(mode)
+    except Exception,exception:
+      logging.exception(exception)
+      template_values = {
+        "traceback": self.format_html(traceback.format_exc()),
+        }
+      return self.response.out.write(template.render("yaa-utzah.html", template_values))
+
 def main():
   application = webapp.WSGIApplication([('/(.*)', MainHandler)],
                                        debug=True)
