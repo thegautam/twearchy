@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-import sys
-sys.path.append('./tweepy')
-
 import logging
 import tweepy
 import string,re
