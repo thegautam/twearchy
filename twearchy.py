@@ -142,12 +142,12 @@ class MainHandler(webapp.RequestHandler):
       content = content + html_status
       count = count + 1
 
-      template_values = {
-        "username": api.me().screen_name,
-        "timeline": content,
-        "count": count,
-        "trash_talk": self.get_trash_talk(count)
-        }
+    template_values = {
+      "username": me.screen_name,
+      "timeline": content,
+      "count": count,
+      "trash_talk": self.get_trash_talk(count)
+      }
 
     return self.response.out.write(template.render("timeline.html", template_values))
 
