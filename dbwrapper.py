@@ -2,6 +2,7 @@ import tweepy
 import logging
 
 from google.appengine.ext import db
+from google.appengine.api import quota
 
 MAX_LONG = ((2 ** 63) - 1)
 MAX_FETCH = 200
@@ -82,7 +83,13 @@ class dbHandler():
     def update_db(self, api):
         user = self.get_user(api.me())
 
+        start = quota.get_request_cpu_usage()
+
         while self.save_missing_tweets(api, user):
             """ Nothing """
+
+        end = quota.get_request_cpu_usage()
+
+        logging.info("CPU Time: %d" % (end - start))
 
         user.make_ids_current()
