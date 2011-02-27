@@ -56,7 +56,7 @@ class MainHandler(webapp.RequestHandler):
     else:
       message = 'Listen much?'
 
-    return '<a class=h href="mailto:gkedia@conaytus.com?subject=Feedback Love">%s</a>' % message
+    return message
 
   def build_auth(self):
     application_key = "fIPX8vbptBVFXe0QQPww4w" 

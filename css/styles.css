@@ -15,6 +15,18 @@ div.message {
     font-size: 13px;
 }
 
+div.message > p.first {
+    border: none;
+    padding-left: 0px;
+}
+
+div.message > p {
+    display: inline;
+    border-left: 1px solid black;
+    padding: 0px 7px 0px 10px;
+    margin: 0px;
+}
+
 div.status {
     padding: 5px;
     font-size: 18px;
