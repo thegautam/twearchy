@@ -96,7 +96,7 @@ class MainHandler(webapp.RequestHandler):
       "redirect_url": redirect_url,
       }
 
-    return self.response.out.write(template.render("fetching.html", template_values))
+    return self.response.out.write(template.render("html/fetching.html", template_values))
 
   def handle_fetching(self):
     auth = self.build_auth()
@@ -153,13 +153,13 @@ class MainHandler(webapp.RequestHandler):
       "trash_talk": self.get_trash_talk(count)
       }
 
-    return self.response.out.write(template.render("timeline.html", template_values))
+    return self.response.out.write(template.render("html/timeline.html", template_values))
 
 
   def handle_request(self, mode=""):
     
     if mode == "":
-      return self.response.out.write(template.render("landing.html", None))
+      return self.response.out.write(template.render("html/landing.html", None))
 
     if mode == "login":
       return self.handle_login()
@@ -179,7 +179,7 @@ class MainHandler(webapp.RequestHandler):
         "traceback": self.format_html(exception),
         "message": message,
         }
-      return self.response.out.write(template.render("yaa-utzah.html", template_values))
+      return self.response.out.write(template.render("html/yaa-utzah.html", template_values))
 
   def get(self, mode=""):
 
