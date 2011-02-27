@@ -88,6 +88,16 @@ class MainHandler(webapp.RequestHandler):
     self.session['access_secret'] = auth.access_token.secret
     return self.redirect("%s/fetching" % self.request.host_url)
 
+  def fetching_html(self, me):
+    redirect_url = "%s/timeline" % self.request.host_url
+
+    template_values = {
+      "username": me.screen_name,
+      "redirect_url": redirect_url,
+      }
+
+    return self.response.out.write(template.render("fetching.html", template_values))
+
   def handle_fetching(self):
     auth = self.build_auth()
     self.session = Session()
@@ -100,16 +110,10 @@ class MainHandler(webapp.RequestHandler):
     api = tweepy.API(auth)
     me = api.me()
 
-    redirect_url = "%s/timeline" % self.request.host_url
-
     logging.info("username %s " % me.screen_name)
 
-    template_values = {
-      "username": me.screen_name,
-      "redirect_url": redirect_url,
-      }
+    return self.fetching_html(me)
 
-    return self.response.out.write(template.render("fetching.html", template_values))
 
   def handle_timeline(self):
     auth = self.build_auth()
@@ -125,7 +129,10 @@ class MainHandler(webapp.RequestHandler):
     me = api.me()
 
     dbhandler = dbHandler()
-    dbhandler.update_db(api)
+    more_tweets = dbhandler.update_db(api)
+
+    if (more_tweets):
+      return self.fetching_html(me)
 
     content = ""
     count = 0

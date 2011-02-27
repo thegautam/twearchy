@@ -83,13 +83,9 @@ class dbHandler():
     def update_db(self, api):
         user = self.get_user(api.me())
 
-        start = quota.get_request_cpu_usage()
+        more_tweets = self.save_missing_tweets(api, user)
 
-        while self.save_missing_tweets(api, user):
-            """ Nothing """
+        if (not more_tweets):
+            user.make_ids_current()
 
-        end = quota.get_request_cpu_usage()
-
-        logging.info("CPU Time: %d" % (end - start))
-
-        user.make_ids_current()
+        return more_tweets
