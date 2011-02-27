@@ -6,6 +6,10 @@ table.center {
     margin-left: 10%;
 }
 
+.wf-loading {
+    visibility: hidden;
+}
+
 div.username {
     font-family: 'Syncopate';
     font-size: 46px;

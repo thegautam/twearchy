@@ -1,7 +1,19 @@
 <html>        
     <head>
-        <link href='http://fonts.googleapis.com/css?family=Syncopate' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
+        <script type="text/javascript">
+          WebFontConfig = {
+          google: { families: [ 'Syncopate', 'Molengo' ] }
+          };
+          (function() {
+          var wf = document.createElement('script');
+          wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+          '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+          wf.type = 'text/javascript';
+          wf.async = 'true';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(wf, s);
+          })();
+        </script>
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>twearchy {{username}}</title>
         <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
