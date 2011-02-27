@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import sys
+sys.path.append('./tweepy')
 
 import logging
 import tweepy
@@ -13,11 +15,11 @@ from sessions import Session
 from dbwrapper import dbHandler, Tweet
 
 class MainHandler(webapp.RequestHandler):
+
   def format_html(self, str):
     out = string.replace(str, '  ', '&nbsp;&nbsp;')
     out = string.replace(out, '\n', '<br/>')
     return out
-
 
   def process_status(self, tweet, user):
 
@@ -66,84 +68,79 @@ class MainHandler(webapp.RequestHandler):
 
     return tweepy.OAuthHandler(application_key, application_secret, callback_url)
 
-  def handle_request(self, mode=""):
-    
-    if mode == "":
-      return self.response.out.write(template.render("landing.html", None))
+  def handle_login(self):
+    auth = self.build_auth()
+    self.session = Session()
+    redirection_url = auth.get_authorization_url(signin_with_twitter=True)
+    self.session['request_token'] = (auth.request_token.key, auth.request_token.secret)
+    return self.redirect(redirection_url)
 
-    if mode == "login":
-      auth = self.build_auth()
-      self.session = Session()
-      redirection_url = auth.get_authorization_url(signin_with_twitter=True)
-      self.session['request_token'] = (auth.request_token.key, auth.request_token.secret)
-      return self.redirect(redirection_url)
-      
-    if mode == "verify":
-      auth = self.build_auth()
-      self.session = Session()
+  def handle_verify(self):
+    auth = self.build_auth()
+    self.session = Session()
 
-      auth_token = self.request.get("oauth_token")
-      auth_verifier = self.request.get("oauth_verifier")
+    auth_token = self.request.get("oauth_token")
+    auth_verifier = self.request.get("oauth_verifier")
 
-      request_token = self.session['request_token']
-      auth.set_request_token(request_token[0], request_token[1])
+    request_token = self.session['request_token']
+    auth.set_request_token(request_token[0], request_token[1])
 
-      auth.get_access_token(auth_verifier)
+    auth.get_access_token(auth_verifier)
 
-      self.session['access_token'] = auth.access_token.key
-      self.session['access_secret'] = auth.access_token.secret
-      return self.redirect("%s/fetching" % self.request.host_url)
+    self.session['access_token'] = auth.access_token.key
+    self.session['access_secret'] = auth.access_token.secret
+    return self.redirect("%s/fetching" % self.request.host_url)
 
-    if mode == "fetching":
-      auth = self.build_auth()
-      self.session = Session()
+  def handle_fetching(self):
+    auth = self.build_auth()
+    self.session = Session()
 
-      access_token = self.session['access_token']
-      access_secret = self.session['access_secret']
+    access_token = self.session['access_token']
+    access_secret = self.session['access_secret']
 
-      auth.set_access_token(access_token, access_secret)
+    auth.set_access_token(access_token, access_secret)
 
-      api = tweepy.API(auth)
-      me = api.me()
+    api = tweepy.API(auth)
+    me = api.me()
 
-      redirect_url = "%s/timeline" % self.request.host_url
+    redirect_url = "%s/timeline" % self.request.host_url
 
-      logging.info("username %s " % me.screen_name)
+    logging.info("username %s " % me.screen_name)
 
-      template_values = {
-        "username": me.screen_name,
-        "redirect_url": redirect_url,
-        }
+    template_values = {
+      "username": me.screen_name,
+      "redirect_url": redirect_url,
+      }
 
-      return self.response.out.write(template.render("fetching.html", template_values))
+    return self.response.out.write(template.render("fetching.html", template_values))
 
-    if mode == "timeline":
-      auth = self.build_auth()
-      self.session = Session()
+  def handle_timeline(self):
+    auth = self.build_auth()
+    self.session = Session()
 
-      access_token = self.session['access_token']
-      access_secret = self.session['access_secret']
+    access_token = self.session['access_token']
+    access_secret = self.session['access_secret']
 
-      logging.info("%s %s" % (access_token, access_secret))
-      auth.set_access_token(access_token, access_secret)
+    logging.info("%s %s" % (access_token, access_secret))
+    auth.set_access_token(access_token, access_secret)
 
-      api = tweepy.API(auth)
-      me = api.me()
+    api = tweepy.API(auth)
+    me = api.me()
 
-      dbhandler = dbHandler()
-      dbhandler.update_db(api)
+    dbhandler = dbHandler()
+    dbhandler.update_db(api)
 
-      content = ""
-      count = 0
+    content = ""
+    count = 0
 
-      t = Tweet.all()
-      t.filter("user_id = ", me.id)
-      t.order("-id")
+    t = Tweet.all()
+    t.filter("user_id = ", me.id)
+    t.order("-id")
 
-      for status in t:
-        html_status = self.process_status(status, me)
-        content = content + html_status
-        count = count + 1
+    for status in t:
+      html_status = self.process_status(status, me)
+      content = content + html_status
+      count = count + 1
 
       template_values = {
         "username": api.me().screen_name,
@@ -152,7 +149,25 @@ class MainHandler(webapp.RequestHandler):
         "trash_talk": self.get_trash_talk(count)
         }
 
-      return self.response.out.write(template.render("timeline.html", template_values))
+    return self.response.out.write(template.render("timeline.html", template_values))
+
+
+  def handle_request(self, mode=""):
+    
+    if mode == "":
+      return self.response.out.write(template.render("landing.html", None))
+
+    if mode == "login":
+      return self.handle_login()
+      
+    if mode == "verify":
+      return self.handle_verify()
+
+    if mode == "fetching":
+      return self.handle_fetching()
+
+    if mode == "timeline":
+      return self.handle_timeline()
 
   def handle_exception(self, exception, message):
       logging.exception(exception)
