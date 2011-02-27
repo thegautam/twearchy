@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      WebFontConfig = {
+      google: { families: [ 'Syncopate', 'Molengo' ] }
+      };
+      (function() {
+      var wf = document.createElement('script');
+      wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+      })();
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <title>twearchy {% block title %}{% endblock %}</title>
+    <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    {% block body %}{% endblock %}
+  </body>
+</html>
