@@ -1,17 +1,22 @@
 body {
-    font-family: 'Molengo';
+    font-family: 'Molengo', 'Tahoma', 'Sans-Serif';
+    visibility: hidden;
 }
 
 table.center {
     margin-left: 10%;
 }
 
-.wf-loading {
-    visibility: hidden;
+.wf-active body {
+    visibility: visible;
+}
+
+.wf-inactive body {
+    visibility: visible;
 }
 
 div.username {
-    font-family: 'Syncopate';
+    font-family: 'Syncopate', 'Helvetica', 'Sans-Serif';
     font-size: 46px;
 }
 
