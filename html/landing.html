@@ -1,25 +1,21 @@
-<html>        
-    <head>
-        <link href='http://fonts.googleapis.com/css?family=Syncopate' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <title>twearchy</title>
-        <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    </head>
-    <body>
-        <table class=center>
-        <tr>
-            <td width=100px><img class=logo src="img/twearchy.png" /></td>
-            <td valign=bottom>
-                <div class=username>Twearchy</div>
-                <div class=message>Where's that needle? Get a little searchy.</div>
-            </td>
-        </tr>
-        <tr><td><br/></td></tr>
-        <tr>
-        <td/><td><a href="/login"><img src="img/twitter.png"/></a></td>
-        </tr>
-        </table>
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %} - search your own twitter {% endblock %}
+
+{% block body %}
+
+<table class=center>
+  <tr>
+    <td width=100px><img class=logo src="img/twearchy.png" /></td>
+    <td valign=bottom>
+      <div class=username>Twearchy</div>
+      <div class=message>Where's that needle? Get a little searchy.</div>
+    </td>
+  </tr>
+  <tr><td><br/></td></tr>
+  <tr>
+    <td/><td><a href="/login"><img src="img/twitter.png"/></a></td>
+  </tr>
+</table>
+
+{% endblock %}

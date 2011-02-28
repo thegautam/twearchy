@@ -1,22 +1,23 @@
-<html>        
-    <head>
-        <link href='http://fonts.googleapis.com/css?family=Syncopate' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <title>twearchy {{username}}</title>
-        <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-        <meta http-equiv="REFRESH" content="3;url={{redirect_url}}">
-    </head>
-    <body>
-        <table class=center>
-        <tr>
-            <td width=100px><img class=logo src="img/twearchy.png" /></td>
-            <td valign=bottom>
-                <div class=username>{{username}}</div>
-                <div class=message>Fetching your updates before you can say hiybbprqag...</div>
-            </td>
-        </tr>
-        </table>
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %} fetching {% endblock %}
+
+{% block header %}
+
+<meta http-equiv="REFRESH" content="3;url={{redirect_url}}">
+
+{% endblock %}
+
+{% block body %}
+
+<table class=center>
+  <tr>
+    <td width=100px><img class=logo src="img/twearchy.png" /></td>
+    <td valign=bottom>
+      <div class=username>{{username}}</div>
+      <div class=message>Fetching your updates before you can say hiybbprqag...</div>
+    </td>
+  </tr>
+</table>
+
+{% endblock %}
