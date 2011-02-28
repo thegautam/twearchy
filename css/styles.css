@@ -15,21 +15,21 @@ table.center {
     visibility: visible;
 }
 
-div.username {
+div.heading {
     font-family: 'Syncopate', 'Helvetica', 'Sans-Serif';
     font-size: 46px;
 }
 
-div.message {
+div.detail {
     font-size: 13px;
 }
 
-div.message > p.first {
+div.detail > p.first {
     border: none;
     padding-left: 0px;
 }
 
-div.message > p {
+div.detail > p {
     display: inline;
     border-left: 1px solid black;
     padding: 0px 7px 0px 10px;
@@ -55,6 +55,10 @@ div.meta {
 
 tr.tweet:hover .meta {
     visibility: visible;
+}
+
+td.logo {
+   width: 100px;
 }
 
 img {

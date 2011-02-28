@@ -2,19 +2,17 @@
 
 {% block title %} yaa-utzah {% endblock %}
 
-{% block body %}
+{% block heading %} Yaa-utzah! {% endblock %}
 
-<table class=center>
-  <tr>
-    <td width=100px><img class=logo src="img/twearchy.png" /></td>
-    <td valign=bottom>
-      <div class=username>Yaa-utzah!</div>
-      <div class=message>Twearchish for "Something's horribly wrong."</div>
-    </td>
-  </tr>
-  <tr><td><br/></td></tr>
-  <tr><td/><td><div class="status">{{message}}</div></td></tr>
-  <tr><td/><td><div class="error">{{traceback}}</div></td></tr>
-</table>
+{% block detail %}
+
+Twearchish for "Something's horribly wrong."
+
+{% endblock %}
+
+{% block content %}
+
+<tr><td/><td><div class="status">{{message}}</div></td></tr>
+<tr><td/><td><div class="error">{{traceback}}</div></td></tr>
 
 {% endblock %}

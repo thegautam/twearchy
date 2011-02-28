@@ -2,20 +2,19 @@
 
 {% block title %} - search your own twitter {% endblock %}
 
-{% block body %}
+{% block heading %} Twearchy {% endblock %}
 
-<table class=center>
-  <tr>
-    <td width=100px><img class=logo src="img/twearchy.png" /></td>
-    <td valign=bottom>
-      <div class=username>Twearchy</div>
-      <div class=message>Where's that needle? Get a little searchy.</div>
-    </td>
-  </tr>
-  <tr><td><br/></td></tr>
-  <tr>
-    <td/><td><a href="/login"><img src="img/twitter.png"/></a></td>
-  </tr>
-</table>
+{% block detail %}
+
+Where's that needle? Get a little searchy.
+
+{% endblock %}
+
+{% block content %}
+
+<tr><td><br/></td></tr>
+<tr>
+  <td/><td><a href="/login"><img src="img/twitter.png"/></a></td>
+</tr>
 
 {% endblock %}

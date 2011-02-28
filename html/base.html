@@ -21,6 +21,19 @@
     {% block header %}{% endblock %}
   </head>
   <body>
-    {% block body %}{% endblock %}
+    <table class=center>
+      <tr>
+        <td class=logo><img class=logo src="img/twearchy.png" /></td>
+        <td valign=bottom>
+          <div class=heading>
+            {% block heading %}{% endblock %}
+          </div>
+          <div class=detail>
+            {% block detail %}{% endblock %}
+          </div>
+        </td>
+      </tr>
+      {% block content %}{% endblock %}
+    </table>
   </body>
 </html>

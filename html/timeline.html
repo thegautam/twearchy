@@ -2,21 +2,18 @@
 
 {% block title %} {{username}} {% endblock %}
 
-{% block body %}
+{% block heading %} {{username}} {% endblock %}
 
-<table class=center>
-  <tr>
-    <td><img class=logo src="img/twearchy.png" /></td>
-    <td valign=bottom>
-      <div class=username>{{username}}</div>
-      <div class=message>
-        <p class="first">{{count}} tweets. {{trash_talk}}</p>
-        <p><a href="mailto:twearchy@conaytus.com">Feedback</a></p>
-      </div>
-    </td>
-  </tr>
-  <tr><td><br/></td></tr>
-  {{timeline}}
-</table>
+{% block detail %}
+
+<p class="first">{{count}} tweets. {{trash_talk}}</p>
+<p><a href="mailto:twearchy@conaytus.com">Feedback</a></p>
+
+{% endblock %}
+
+{% block content %}
+
+<tr><td><br/></td></tr>
+{{timeline}}
 
 {% endblock %}
