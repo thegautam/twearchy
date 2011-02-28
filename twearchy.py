@@ -88,12 +88,25 @@ class MainHandler(webapp.RequestHandler):
     self.session['access_secret'] = auth.access_token.secret
     return self.redirect("%s/fetching" % self.request.host_url)
 
-  def fetching_html(self, me):
+  def get_fetching_message(self, count):
+    if count == 0:
+      return "Fetching your tweets before you can say hiybbprqag ..."
+    elif count == 1:
+      return "This may take a while, but it should be worth the wait."
+    elif count == 3:
+      return "We'll definitely be faster the next time around."
+    elif count == 5:
+      return "Still hustling forward, sit tight."
+    elif count:
+      return "We've fetched %d tweets. Are we there yet?" % ((count - 1) * 200)
+
+  def fetching_html(self, me, fetching_count):
     redirect_url = "%s/timeline" % self.request.host_url
 
     template_values = {
       "username": me.screen_name,
       "redirect_url": redirect_url,
+      "fetching_message": self.get_fetching_message(fetching_count),
       }
 
     return self.response.out.write(template.render("html/fetching.html", template_values))
@@ -112,7 +125,10 @@ class MainHandler(webapp.RequestHandler):
 
     logging.info("username %s " % me.screen_name)
 
-    return self.fetching_html(me)
+    fetching_count = 0;
+    self.session['fetching_count'] = fetching_count;
+
+    return self.fetching_html(me, fetching_count)
 
 
   def handle_timeline(self):
@@ -132,7 +148,9 @@ class MainHandler(webapp.RequestHandler):
     more_tweets = dbhandler.update_db(api)
 
     if (more_tweets):
-      return self.fetching_html(me)
+      fetching_count = self.session['fetching_count'] + 1
+      self.session['fetching_count'] = fetching_count
+      return self.fetching_html(me, fetching_count)
 
     content = ""
     count = 0
