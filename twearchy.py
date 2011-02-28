@@ -94,7 +94,7 @@ class MainHandler(webapp.RequestHandler):
     elif count == 1:
       return "This may take a while, but it should be worth the wait."
     elif count == 3:
-      return "We'll definitely be faster the next time around."
+      return "We'll be faster the next time around. Promise!"
     elif count == 5:
       return "Still hustling forward, sit tight."
     elif count:
